@@ -10,13 +10,12 @@ const PLUGIN = TrailingBlock({
     match: node => (node.type == 'paragraph' || node.type == 'footnote')
 });
 
-const SCHEMA = Slate.Schema.create({
+const SCHEMA = {
     plugins: [PLUGIN]
-});
+};
+
 
 function deserializeValue(json) {
-    json.schema = SCHEMA;
-
     return Slate.Value.fromJSON(
         json,
         { normalize: false }
@@ -36,15 +35,13 @@ describe('slate-trailing-block', function() {
             const expected =
                 fs.existsSync(expectedPath) && readMetadata.sync(expectedPath);
 
-            // eslint-disable-next-line
-            const runChange = require(path.resolve(dir, 'change.js'));
-
             const valueInput = deserializeValue(input);
+            const editorInput = new Slate.Editor({ plugins: [PLUGIN], value: valueInput });
 
-            const newChange = runChange(PLUGIN, valueInput.change());
+            editorInput.run('onChange');
 
             if (expected) {
-                const newDocJSon = newChange.value.toJSON();
+                const newDocJSon = editorInput.value.toJSON();
                 expect(newDocJSon).toEqual(deserializeValue(expected).toJSON());
             }
         });
