@@ -1,5 +1,5 @@
 {
-  "name": "slate-trailing-block",
+  "name": "@wikifactory/slate-trailing-block",
   "description": "Slate plugin to ensure a trailing block.",
   "version": "0.6.0",
   "license": "Apache-2.0",
